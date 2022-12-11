@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_study/data/remote/response/api_status.dart';
 import 'package:flutter_application_study/view/login_screen.dart';
 import 'package:flutter_application_study/view/widget/my_text_widget.dart';
 import 'package:flutter_application_study/viewmodel/user_view_model.dart';
 import 'package:provider/provider.dart';
+import '../data/remote/response/api_response.dart';
 import '../models/user_model.dart';
 import '../res/app_context_extensions.dart';
 
@@ -93,35 +95,39 @@ class _SignUpScreen extends State<SignUpScreen> {
                         }
                       ),
                     ),
-                    Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical:
-                                context.resources.dimension.mediumElevation),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              if (_formkey.currentState!.validate()) {
-                                _onSignUp(context, 
-                                  UserModel(
-                                    email: context.read<UserViewModel>().Email,
-                                    password: context.read<UserViewModel>().Password
-                                    )
-                                  );
-                              }
-                            },
-                            child: const Text('SignUp')))
+                    Consumer<UserViewModel>(
+                      builder: (context, value, _) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: context.resources.dimension.mediumElevation),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                if (_formkey.currentState!.validate()) {
+                                  UserModel user = UserModel(email: value.Email, password: value.password);
+                                  _onSignUp(context,user,value.Response);
+                                }
+                              },
+                              child: const Text('SignUp')));
+                      },
+                    )
+                    
                   ]),
                 ],
               )),
         ));
   }
 
-  void _onSignUp(BuildContext context, UserModel user) {
+  void _onSignUp(BuildContext context, UserModel user, ApiResponse<String?> Response) {
     context.read<UserViewModel>().signup(user);
-    // if (context.read<UserViewModel>().Token.isNotEmpty){
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //     MaterialPageRoute(builder: (context) => LoginScreen()),
-    //     ModalRoute.withName(SignUpScreen.id)
-    //   );
-    // }
+    switch(Response.status){
+      case ApiStatus.COMPLETED:
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute<void>(builder: (context) => LoginScreen()),
+                ModalRoute.withName(SignUpScreen.id),
+              );
+        break;
+      default:
+        log("${Response.message}");
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_study/models/user_model.dart';
+import 'package:flutter_application_study/view/signup_screen.dart';
 import 'package:flutter_application_study/view/widget/my_text_widget.dart';
 import 'package:flutter_application_study/viewmodel/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -67,19 +68,49 @@ class _LoginScreen extends State<LoginScreen> {
                             context.read<UserViewModel>().Password = value,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: context.resources.dimension.mediumElevation),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formkey.currentState!.validate()) {
-                            String email = context.read<UserViewModel>().Email;
-                            String password = context.read<UserViewModel>().Password;
-                            UserModel user = UserModel(email: email, password: password);
-                            _onLogin(context, user);
-                          }
-                        },
-                        child: const Text('Submit'))
-                    )
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+
+                              padding: EdgeInsets.symmetric(
+                                  vertical: context.resources.dimension.mediumElevation,
+                                  horizontal: context.resources.dimension.mediumMargin
+                                  ),
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    if (_formkey.currentState!.validate()) {
+                                      String email = context.read<UserViewModel>().Email;
+                                      String password = context.read<UserViewModel>().Password;
+                                      UserModel user = UserModel(email: email, password: password);
+                                      _onSignUp(context, user);
+                                    }
+                                  },
+                                  child: const Text('SignUp'))
+                                  ),
+                          Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: context.resources.dimension.mediumElevation,
+                                  horizontal: context.resources.dimension.mediumMargin
+
+                                  ),
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    if (_formkey.currentState!.validate()) {
+                                      String email =
+                                          context.read<UserViewModel>().Email;
+                                      String password = context
+                                          .read<UserViewModel>()
+                                          .Password;
+                                      UserModel user = UserModel(
+                                          email: email, password: password);
+                                      _onLogin(context, user);
+                                    }
+                                  },
+                                  child: const Text('Submit'))
+                                  )
+                        ]),
                   ]),
                 ],
               )),
@@ -88,5 +119,9 @@ class _LoginScreen extends State<LoginScreen> {
 
   void _onLogin(BuildContext context, UserModel user) {
     context.read<UserViewModel>().login(user);
+  }
+
+  void _onSignUp(BuildContext context, UserModel user){
+    Navigator.push(context,MaterialPageRoute(builder: (context) => SignUpScreen()));
   }
 }

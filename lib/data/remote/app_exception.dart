@@ -14,6 +14,10 @@ class FetchDataException extends AppException {
   FetchDataException([String? message]) : super(message!, "Error During Communication: ");
 }
 
+class NotFoundException extends AppException {
+  NotFoundException([String? message]) : super (message!, "No data found in the system: ");
+}
+
 class BadRequestException extends AppException {
   BadRequestException([message]) : super(message, "Invalid Request: ");
 }

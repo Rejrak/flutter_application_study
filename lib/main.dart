@@ -1,8 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_study/viewmodel/user_view_model.dart';
 import 'package:provider/provider.dart';
+
 import 'view/login_screen.dart';
 import 'view/signup_screen.dart';
+
 void main() {
   // runApp(MyApp());
 
@@ -15,7 +19,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget{
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

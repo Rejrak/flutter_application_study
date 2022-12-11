@@ -9,20 +9,20 @@ class UserRepository {
   final BaseApiService _apiService = NetWorkApiService();
 
   @override
-  Future<String?> postLogin(UserModel user) async {
+  Future<Map<String, dynamic>> postLogin(UserModel user) async {
     try{
       dynamic response = await _apiService.post(ApiEndPoints().LOGIN, user.toJson());
-      return response.toString();
+      return response;
     } catch (e){
       throw e;
     }
   }
 
   @override
-  Future<String?> postSignup(dynamic user) async {
+  Future<dynamic> postSignup(UserModel user) async {
     try {
-      dynamic response = await _apiService.post(ApiEndPoints().SIGNUP, user);
-      final jsonData = UserModel.fromJson(response);
+      dynamic response = await _apiService.post(ApiEndPoints().SIGNUP, user.toJson());
+      return response;
     } catch (e) {
       throw e;
     }

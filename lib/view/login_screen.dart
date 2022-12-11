@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_study/data/remote/response/api_status.dart';
 import 'package:flutter_application_study/models/user_model.dart';
 import 'package:flutter_application_study/view/signup_screen.dart';
 import 'package:flutter_application_study/view/widget/my_text_widget.dart';
@@ -16,7 +18,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  final UserViewModel userViewModel = UserViewModel();
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   @override
@@ -60,6 +61,9 @@ class _LoginScreen extends State<LoginScreen> {
                       width: context.resources.dimension.formWidth,
                       child: TextFormField(
                         keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                        enableSuggestions: false,
+                        autocorrect: false,
                         decoration: InputDecoration(
                             icon: const Icon(Icons.password),
                             hintText: context.resources.strings.Password,
@@ -73,43 +77,59 @@ class _LoginScreen extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-
                               padding: EdgeInsets.symmetric(
-                                  vertical: context.resources.dimension.mediumElevation,
-                                  horizontal: context.resources.dimension.mediumMargin
-                                  ),
+                                  vertical: context
+                                      .resources.dimension.mediumElevation,
+                                  horizontal:
+                                      context.resources.dimension.mediumMargin),
                               child: ElevatedButton(
                                   onPressed: () {
                                     if (_formkey.currentState!.validate()) {
-                                      String email = context.read<UserViewModel>().Email;
-                                      String password = context.read<UserViewModel>().Password;
-                                      UserModel user = UserModel(email: email, password: password);
-                                      _onSignUp(context, user);
+                                      _onSignUp(
+                                          context,
+                                          UserModel(
+                                              email: context
+                                                  .read<UserViewModel>()
+                                                  .Email,
+                                              password: context
+                                                  .read<UserViewModel>()
+                                                  .Password));
                                     }
                                   },
-                                  child: const Text('SignUp'))
-                                  ),
+                                  child: const Text('SignUp'))),
                           Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: context.resources.dimension.mediumElevation,
-                                  horizontal: context.resources.dimension.mediumMargin
-
-                                  ),
+                                  vertical: context
+                                      .resources.dimension.mediumElevation,
+                                  horizontal:
+                                      context.resources.dimension.mediumMargin),
                               child: ElevatedButton(
                                   onPressed: () {
                                     if (_formkey.currentState!.validate()) {
-                                      String email =
-                                          context.read<UserViewModel>().Email;
-                                      String password = context
-                                          .read<UserViewModel>()
-                                          .Password;
-                                      UserModel user = UserModel(
-                                          email: email, password: password);
-                                      _onLogin(context, user);
+                                      _onLogin(
+                                          context,
+                                          UserModel(
+                                              email: context
+                                                  .read<UserViewModel>()
+                                                  .Email,
+                                              password: context
+                                                  .read<UserViewModel>()
+                                                  .Password));
                                     }
                                   },
-                                  child: const Text('Submit'))
-                                  )
+                                  child: const Text('Submit'))),
+                          Consumer<UserViewModel>(
+                            builder: ((context, userViewModel, _) {
+                              switch (userViewModel.Response.status) {
+                                case ApiStatus.COMPLETED:
+                                  return  Text('Logged in');
+                                case ApiStatus.LOADING:
+                                  return Text('');
+                                case ApiStatus.ERROR:
+                                default:
+                                  return Text('Error');
+                              }
+                          }))
                         ]),
                   ]),
                 ],
@@ -119,9 +139,13 @@ class _LoginScreen extends State<LoginScreen> {
 
   void _onLogin(BuildContext context, UserModel user) {
     context.read<UserViewModel>().login(user);
+    log("${context.read<UserViewModel>().Response}");
   }
 
-  void _onSignUp(BuildContext context, UserModel user){
-    Navigator.push(context,MaterialPageRoute(builder: (context) => SignUpScreen()));
+  void _onSignUp(BuildContext _context, UserModel user) {
+    Navigator.of(_context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (context) => SignUpScreen()),
+      ModalRoute.withName(LoginScreen.id),
+    );
   }
 }

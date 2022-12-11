@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_study/view/login_screen.dart';
 import 'package:flutter_application_study/view/widget/my_text_widget.dart';
 import 'package:flutter_application_study/viewmodel/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -97,13 +100,12 @@ class _SignUpScreen extends State<SignUpScreen> {
                         child: ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                String email =
-                                    context.read<UserViewModel>().Email;
-                                String password =
-                                    context.read<UserViewModel>().Password;
-                                UserModel user =
-                                    UserModel(email: email, password: password);
-                                _onSignUp(context, user);
+                                _onSignUp(context, 
+                                  UserModel(
+                                    email: context.read<UserViewModel>().Email,
+                                    password: context.read<UserViewModel>().Password
+                                    )
+                                  );
                               }
                             },
                             child: const Text('SignUp')))
@@ -114,6 +116,12 @@ class _SignUpScreen extends State<SignUpScreen> {
   }
 
   void _onSignUp(BuildContext context, UserModel user) {
-
+    context.read<UserViewModel>().signup(user);
+    // if (context.read<UserViewModel>().Token.isNotEmpty){
+    //   Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (context) => LoginScreen()),
+    //     ModalRoute.withName(SignUpScreen.id)
+    //   );
+    // }
   }
 }

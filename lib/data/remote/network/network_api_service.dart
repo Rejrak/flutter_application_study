@@ -38,6 +38,8 @@ class NetWorkApiService extends BaseApiService{
         throw UnauthorisedException(response.body.toString());
       case 404:
         throw NotFoundException(response.body.toString());
+      case 422: 
+        throw UnprocessableEntityExeption(response.body.toString());
       case 500:
       default:
         throw FetchDataException('Error occurred while communication with server with status code : ${response.statusCode}');

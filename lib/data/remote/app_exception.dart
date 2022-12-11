@@ -29,3 +29,7 @@ class UnauthorisedException extends AppException {
 class InvalidInputException extends AppException {
   InvalidInputException([String? message]) : super(message!, "Invalid Input: ");
 }
+
+class UnprocessableEntityExeption extends AppException{
+  UnprocessableEntityExeption([message]) : super(message, "Unprocessable Entity");
+}

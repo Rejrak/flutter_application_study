@@ -13,6 +13,8 @@ class ApiResponse<T>{
 
   ApiResponse.error(this.message) : status = ApiStatus.ERROR;
 
+  ApiResponse.empty() : status = ApiStatus.EMPTY;
+
   @override
   String toString(){
     return "Status : $status \n Message : $message \n Data: $data";

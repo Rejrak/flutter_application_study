@@ -10,7 +10,7 @@ import '../repository/user_repository.dart';
 class UserViewModel with ChangeNotifier{
   final _myRepo = UserRepository();
   
-  ApiResponse<String> _response = ApiResponse.loading();
+  ApiResponse<String> _response = ApiResponse.empty();
   String _email = "";
   String password = "";
 

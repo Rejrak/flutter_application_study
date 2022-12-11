@@ -1,5 +1,6 @@
 enum ApiStatus{
   LOADING,
   COMPLETED,
-  ERROR
+  ERROR,
+  EMPTY
 }

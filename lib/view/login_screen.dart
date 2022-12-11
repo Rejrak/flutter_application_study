@@ -121,10 +121,12 @@ class _LoginScreen extends State<LoginScreen> {
                           Consumer<UserViewModel>(
                             builder: ((context, userViewModel, _) {
                               switch (userViewModel.Response.status) {
-                                case ApiStatus.COMPLETED:
-                                  return  Text('Logged in');
+                                case ApiStatus.EMPTY:
+                                  return  Text('');
                                 case ApiStatus.LOADING:
-                                  return Text('');
+                                  return Text('Loading');
+                                case ApiStatus.COMPLETED:
+                                  return Text('logged in');
                                 case ApiStatus.ERROR:
                                 default:
                                   return Text('Error');
@@ -139,7 +141,6 @@ class _LoginScreen extends State<LoginScreen> {
 
   void _onLogin(BuildContext context, UserModel user) {
     context.read<UserViewModel>().login(user);
-    log("${context.read<UserViewModel>().Response}");
   }
 
   void _onSignUp(BuildContext _context, UserModel user) {
